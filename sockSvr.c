@@ -10,6 +10,7 @@
 #include <time.h> 
 #include <stdbool.h> 
 #include <sys/time.h>
+#include <errno.h>
 #define BUFSIZE     128
 #define TIMESIZE    20
 void printTime(){
@@ -25,7 +26,8 @@ void printTime(){
 
 int main(int argc, char *argv[])
 {
-    int listenfd = 0, connfd = 0, n=0;
+    setbuf(stdout, NULL);
+    int listenfd = 0, connfd = 0, n = 0, reuse = 1;
     struct sockaddr_in serv_addr; 
     FILE * fd = fopen( "OrderQuote.dat" , "w");
     setbuf(fd, NULL);
@@ -42,13 +44,19 @@ int main(int argc, char *argv[])
     memset(&serv_addr, '0', sizeof(serv_addr));
     memset(recvBuff, '0', sizeof(recvBuff)); 
 
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(5000); 
 
-    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
-
-    listen(listenfd, 10); 
+    if ( bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0 ){
+        perror("bind fail ");
+        return false;
+    }
+    if ( listen(listenfd, 10) < 0 ){
+        perror("listen fail ");
+        return false;
+    }
 
     while(1)
     {

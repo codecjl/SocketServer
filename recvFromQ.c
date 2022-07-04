@@ -49,7 +49,7 @@ int main(int argc, char * argv[])
     }
 
     // Socket init
-    int sockfd = 0, n=0;
+    int sockfd = 0, n=0, firsttry=1;
     char sendBuff[BUFSIZE];
     struct sockaddr_in serv_addr; 
 
@@ -113,8 +113,13 @@ int main(int argc, char * argv[])
                 return 1;
             } 
             while ( connect( sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) != 0 ){
-                printTime();
-                perror("retry connect to server 2 ");
+                if ( firsttry == 1 ){
+                    printTime();
+                    perror("retry connect to server 2 ");
+                    firsttry = 0;
+                }
+                else
+                    printf(".");    
                 if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
                 {
                     printf("\n Error : Could not create socket \n");
@@ -122,8 +127,10 @@ int main(int argc, char * argv[])
                 } 
                 usleep(500000);
             }
+	    printf("\n");
             printTime();
             puts("reconnect successful\n");
+            firsttry = 1;
             if( send(sockfd, rcvbuffer.mtext, strlen(rcvbuffer.mtext), MSG_NOSIGNAL) < 0 ){
                 printTime();
                 perror("Can not send the data out. EXIT ");
@@ -131,7 +138,7 @@ int main(int argc, char * argv[])
                 exit(1);
             }
         }
-        printf("%s\n", rcvbuffer.mtext);
+        //printf("%s\n", rcvbuffer.mtext);
         usleep(1);
     }
     close(sockfd);
