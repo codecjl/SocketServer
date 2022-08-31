@@ -24,6 +24,12 @@ int main(int argc, char * argv[])
 
     key = 1234;
 
+    if(argc != 2)
+    {
+        printf("\n Usage: %s <number of message> \n",argv[0]);
+        return 1;
+    } 
+
     if ((msqid = msgget(key, msgflg )) < 0)
     {
         perror("msgsnd");

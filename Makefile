@@ -1,4 +1,4 @@
-all: recvFromQ send2Q sockSvr
+all: recvFromQ send2Q sockSvr consuming_cpu consuming_mem
 
 CC=gcc -m64 
 WARNING_FLAG = -Wconversion -Wfloat-equal \
@@ -16,7 +16,7 @@ CCFLAGS = -g  -std=gnu18 $(WARNING_FLAG) $(SEC_FLAG) -I${INCPATH} ${DEF}
 
 LIBS = -pthread -lm -lrt -fsanitize=address -fsanitize-recover=all -lasan
 
-SRCS = recvFromQ.c send2Q.c sockSvr.c
+SRCS = recvFromQ.c send2Q.c sockSvr.c consuming_mem.c consuming_cpu.c
 
 OBJS =	$(SRCS:.c=.o)
 
@@ -30,6 +30,12 @@ send2Q: send2Q.o
 	${CC} -o ${BIN}/$@ $^ ${LIBS}
 
 sockSvr: sockSvr.o
+	${CC} -o ${BIN}/$@ $^ ${LIBS}
+
+consuming_cpu: consuming_cpu.o
+	${CC} -o ${BIN}/$@ $^ ${LIBS}
+
+consuming_mem: consuming_mem.o
 	${CC} -o ${BIN}/$@ $^ ${LIBS}
 
 #clang_analyze: 

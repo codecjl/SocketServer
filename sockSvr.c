@@ -13,7 +13,7 @@
 #include <errno.h>
 #define BUFSIZE     128
 #define TIMESIZE    20
-void printTime(){
+void printTime(void){
     time_t      curtime;
     struct tm   tp;
 	struct timeval tv;
@@ -26,8 +26,11 @@ void printTime(){
 
 int main(int argc, char *argv[])
 {
+    (void)argc;
+    (void)argv;
     setbuf(stdout, NULL);
-    int listenfd = 0, connfd = 0, n = 0, reuse = 1;
+    int listenfd = 0, connfd = 0, reuse = 1;
+    long n = 0;
     struct sockaddr_in serv_addr; 
     FILE * fd = fopen( "OrderQuote.dat" , "w");
     setbuf(fd, NULL);

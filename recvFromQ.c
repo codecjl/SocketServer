@@ -22,7 +22,7 @@ typedef struct msgbuf
     char    mtext[MAXSIZE];
 } msgbuf;
 
-void printTime(){
+void printTime(void){
     time_t      curtime;
     struct tm   tp;
 	struct timeval tv;
@@ -49,7 +49,8 @@ int main(int argc, char * argv[])
     }
 
     // Socket init
-    int sockfd = 0, n=0, firsttry=1;
+    int sockfd = 0, firsttry=1;
+    long n = 0;
     char sendBuff[BUFSIZE];
     struct sockaddr_in serv_addr; 
 

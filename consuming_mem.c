@@ -5,6 +5,8 @@
 #define GSize 1073741824
 
 int main(int argc, char * argv[]){
+    (void)argc;
+    (void)argv;
     char * mm[100];
     int n;
     printf("how many Gigabyte of memory you want to lock? ");
@@ -23,8 +25,9 @@ int main(int argc, char * argv[]){
         mlock((const void *)mm[a], GSize ); // avoid paging
     }
     char car;
-    car = getchar();
-    car = getchar();
+    car = (char)getchar();
+    car = (char)getchar();
+    (void)car;
     munlockall();
     return 0;
 }
